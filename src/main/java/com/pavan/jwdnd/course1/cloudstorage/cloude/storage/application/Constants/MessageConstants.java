@@ -14,16 +14,4 @@ public class MessageConstants {
 
     public static final String noteError_exceedLimit = "You have exceeded the size limit(" + SizeConstants.noteMaxSize + ") on your note!";
 
-    public static final String getSuccessMsg_add(String category) {
-        return "You have been added a " + category + " successfully!";
-    }
-
-    public static final String getSuccessMsg_edit(String category) {
-        return "You have been edited a " + category + " successfully!";
-    }
-
-    public static final String getSuccessMsg_delete(String category) {
-        return "You have been deleted a " + category + " successfully!";
-    }
-
 }
