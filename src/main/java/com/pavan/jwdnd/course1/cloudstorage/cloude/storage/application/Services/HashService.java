@@ -1,6 +1,7 @@
 package com.pavan.jwdnd.course1.cloudstorage.cloude.storage.application.Services;
 
 
+import com.pavan.jwdnd.course1.cloudstorage.cloude.storage.application.Models.UserInfoBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -32,12 +33,13 @@ public class HashService {
     }
 
 
-    public String getHashedPassword(String password){
+    public void getHashedPassword(UserInfoBean userInfoBean){
         SecureRandom random = new SecureRandom();
         byte[] salt = new byte[16];
         random.nextBytes(salt);
         String encodedSalt = Base64.getEncoder().encodeToString(salt);
-        String hashedPassword = getHashedValue(password,encodedSalt);
-        return hashedPassword;
+        userInfoBean.setSalt(encodedSalt);
+        String hashedPassword = getHashedValue(userInfoBean.getPassword(),encodedSalt);
+        userInfoBean.setPassword(hashedPassword);
     }
 }

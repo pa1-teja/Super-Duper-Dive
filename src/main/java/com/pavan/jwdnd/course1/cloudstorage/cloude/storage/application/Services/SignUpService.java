@@ -25,7 +25,7 @@ public class SignUpService {
     }
 
     public int registerUser(UserInfoBean userInfoBean){
-        userInfoBean.setPassword(hashService.getHashedPassword(userInfoBean.getPassword()));
+        hashService.getHashedPassword(userInfoBean);
         int insertRecordId = userMapper.insertNewUserRecord(userInfoBean);
         return insertRecordId;
     }

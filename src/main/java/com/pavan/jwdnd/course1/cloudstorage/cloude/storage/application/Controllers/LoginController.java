@@ -43,7 +43,10 @@ public class LoginController {
         }
 
         if (infoBean != null) {
-            if (loginBean.getUsername().equals(infoBean.getUsername()) && hashService.getHashedPassword(loginBean.getPassword()).equals(infoBean.getPassword())) {
+            if (loginBean.getUsername().equals(infoBean.getUsername())
+//                     && hashService.getHashedPassword(loginBean).equals(infoBean.getPassword())
+            )
+            {
                 model.addAttribute("isInvalid", false);
                 return "redirect:/home";
             } else {
@@ -52,13 +55,5 @@ public class LoginController {
         }
 
         return "login";
-    }
-
-    public boolean isUserLoggedOut(){
-        return true;
-    }
-
-    public LoginService getLoginService() {
-        return loginService;
     }
 }
