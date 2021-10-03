@@ -2,6 +2,7 @@ package com.pavan.jwdnd.course1.cloudstorage.cloude.storage.application.Controll
 
 
 import com.pavan.jwdnd.course1.cloudstorage.cloude.storage.application.Models.NotesBean;
+import com.pavan.jwdnd.course1.cloudstorage.cloude.storage.application.Models.FormObjects.NotesFormObject;
 import com.pavan.jwdnd.course1.cloudstorage.cloude.storage.application.Models.ResponseObject;
 import com.pavan.jwdnd.course1.cloudstorage.cloude.storage.application.Services.LoginService;
 import com.pavan.jwdnd.course1.cloudstorage.cloude.storage.application.Services.NotesService;
@@ -19,8 +20,8 @@ import java.util.ArrayList;
 @RequestMapping("/note")
 public class NotesController {
 
-    private NotesService notesService;
-    private LoginService loginService;
+    private final NotesService notesService;
+    private final LoginService loginService;
 
     public NotesController(NotesService notesService, LoginService loginService) {
         this.notesService = notesService;
@@ -28,14 +29,15 @@ public class NotesController {
     }
 
     @PostMapping("/edit")
-    public String addNote(NotesBean notesBean, Model model, Authentication authentication, @ModelAttribute(value = "noteId")String noteId){
+    public String addNote(NotesFormObject formObject, Model model, Authentication authentication, @ModelAttribute(value = "noteid")String noteId){
 
         int userId = loginService.getUserDetailsByUserName(authentication.getName()).getUserId();
+        NotesBean notesBean = new NotesBean(null,formObject.getNotetitle(),formObject.getNotedescription(),userId);
         ArrayList<ResponseObject> list = new ArrayList<>();
         if (noteId.equals("")) {
-             list = notesService.addNote(notesBean, Integer.valueOf(noteId));
+             list = notesService.addNote(notesBean);
         } else {
-            list = notesService.updateNote(Integer.valueOf(noteId), notesBean.getNotetitle(), notesBean.getNotedescription());
+            list = notesService.updateNote( Integer.valueOf(noteId), notesBean.getNotetitle(), notesBean.getNotedescription());
         }
 
         for (ResponseObject object : list) {

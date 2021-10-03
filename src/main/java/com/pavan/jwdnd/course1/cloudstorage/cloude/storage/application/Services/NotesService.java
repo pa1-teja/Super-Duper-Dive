@@ -17,35 +17,58 @@ import java.util.ArrayList;
 @Service
 public class NotesService {
 
-    private NotesMapper notesMapper;
+    private final NotesMapper notesMapper;
 
     public NotesService(NotesMapper notesMapper) {
         this.notesMapper = notesMapper;
     }
 
-    public ArrayList<ResponseObject> addNote(NotesBean notesBean, int userId) {
+    public ArrayList<ResponseObject> addNote(NotesBean notesBean) {
         ArrayList<ResponseObject> list = new ArrayList<>();
         try {
             if (notesBean.getNotedescription().length() > SizeConstants.noteMaxSize) {
                 throw new NoteException(MessageConstants.noteError_exceedLimit);
             }
-            ResponseObject responseObject = new ResponseObject();
+
             int insertRecordId = notesMapper.addNote(notesBean);
             if (insertRecordId == 1) {
-                responseObject.setFieldObjectName("success");
-                responseObject.setMessage(MessageConstants.getSuccessMsg_add(CategoryConstants.note));
-                responseObject.setStatus(false);
+                ResponseObject object = new ResponseObject();
+                object.setFieldObjectName("success");
+                object.setMessage(MessageConstants.getSuccessMsg_add(CategoryConstants.note));
+                object.setStatus(false);
 
-                list.add(responseObject);
+                list.add(object);
 
+                ResponseObject responseObject = new ResponseObject();
                 responseObject.setFieldObjectName("tabAfterSuccess");
                 responseObject.setMessage(TabConstants.note);
                 responseObject.setStatus(false);
+                list.add(responseObject);
             } else {
-                throw new NoteException(MessageConstants.defaultError);
+                ResponseObject  object = new ResponseObject();
+                object.setFieldObjectName("error");
+                object.setMessage(MessageConstants.defaultError );
+                object.setStatus(false);
+                list.add(object);
+
+                ResponseObject responseObject = new ResponseObject();
+                responseObject.setFieldObjectName("tabAfterError");
+                responseObject.setMessage(TabConstants.note);
+                responseObject.setStatus(false);
+                list.add(responseObject);
             }
         } catch (NoteException e) {
-            throw e;
+            ResponseObject  object = new ResponseObject();
+            object.setFieldObjectName("error");
+            object.setMessage(MessageConstants.defaultError );
+            object.setStatus(false);
+            list.add(object);
+
+            ResponseObject responseObject = new ResponseObject();
+            responseObject.setFieldObjectName("tabAfterError");
+            responseObject.setMessage(TabConstants.note);
+            responseObject.setStatus(false);
+            list.add(responseObject);
         }
         return list;
     }
@@ -57,26 +80,57 @@ public class NotesService {
     public ArrayList<ResponseObject> updateNote(int noteId, String notetitle, String noteDescription){
         ArrayList<ResponseObject> list = new ArrayList<>();
         try {
-            ResponseObject responseObject = new ResponseObject();
+
             int updateRecordId = notesMapper.updateNote(noteId,notetitle,noteDescription);
-            if (updateRecordId == 1) {
-                responseObject.setFieldObjectName("success");
-                responseObject.setMessage(MessageConstants.getSuccessMsg_edit(CategoryConstants.note));
-                responseObject.setStatus(false);
+            if(updateRecordId == 1) {
+                ResponseObject  object = new ResponseObject();
+                object.setFieldObjectName("success");
+                object.setMessage(MessageConstants.getSuccessMsg_edit(CategoryConstants.note));
+                object.setStatus(false);
+                list.add(object);
 
-                list.add(responseObject);
-
+                ResponseObject responseObject = new ResponseObject();
                 responseObject.setFieldObjectName("tabAfterSuccess");
                 responseObject.setMessage(TabConstants.note);
                 responseObject.setStatus(false);
-
+                list.add(responseObject);
             } else {
-                throw new NoteException(MessageConstants.defaultError);
+                ResponseObject  object = new ResponseObject();
+                object.setFieldObjectName("error");
+                object.setMessage(MessageConstants.defaultError );
+                object.setStatus(false);
+                list.add(object);
+
+                ResponseObject responseObject = new ResponseObject();
+                responseObject.setFieldObjectName("tabAfterError");
+                responseObject.setMessage(TabConstants.note);
+                responseObject.setStatus(false);
+                list.add(responseObject);
             }
         }catch (NoteException e){
-            throw e;
+            ResponseObject  object = new ResponseObject();
+            object.setFieldObjectName("error");
+            object.setMessage(MessageConstants.defaultError );
+            object.setStatus(false);
+            list.add(object);
+
+            ResponseObject responseObject = new ResponseObject();
+            responseObject.setFieldObjectName("tabAfterError");
+            responseObject.setMessage(TabConstants.note);
+            responseObject.setStatus(false);
+            list.add(responseObject);
         }catch(Exception e) {
-        throw new NoteException(MessageConstants.defaultError, e);
+            ResponseObject  object = new ResponseObject();
+            object.setFieldObjectName("error");
+            object.setMessage(MessageConstants.defaultError );
+            object.setStatus(false);
+            list.add(object);
+
+            ResponseObject responseObject = new ResponseObject();
+            responseObject.setFieldObjectName("tabAfterError");
+            responseObject.setMessage(TabConstants.note);
+            responseObject.setStatus(false);
+            list.add(responseObject);
     }
         return list;
     }
@@ -85,25 +139,57 @@ public class NotesService {
     public ArrayList<ResponseObject> deleteNote(int noteId) {
         ArrayList<ResponseObject> list = new ArrayList<>();
         try {
-            ResponseObject responseObject = new ResponseObject();
+
             int deleteRecordId = notesMapper.deleteNote(noteId);
             if (deleteRecordId == 1) {
-                responseObject.setFieldObjectName("success");
-                responseObject.setMessage(MessageConstants.getSuccessMsg_delete(CategoryConstants.note));
-                responseObject.setStatus(false);
-                list.add(responseObject);
+                ResponseObject object = new ResponseObject();
+                object.setFieldObjectName("success");
+                object.setMessage(MessageConstants.getSuccessMsg_delete(CategoryConstants.note));
+                object.setStatus(false);
+                list.add(object);
 
+                ResponseObject responseObject = new ResponseObject();
                 responseObject.setFieldObjectName("tabAfterSuccess");
                 responseObject.setMessage(TabConstants.note);
                 responseObject.setStatus(false);
                 list.add(responseObject);
             } else {
-                throw new NoteException(MessageConstants.defaultError);
+                ResponseObject object = new ResponseObject();
+                object.setFieldObjectName("error");
+                object.setMessage(MessageConstants.getFailureMsg_delete(CategoryConstants.note));
+                object.setStatus(false);
+                list.add(object);
+
+                ResponseObject responseObject = new ResponseObject();
+                responseObject.setFieldObjectName("tabAfterError");
+                responseObject.setMessage(TabConstants.note);
+                responseObject.setStatus(false);
+                list.add(responseObject);
             }
         } catch(NoteException ne) {
-            throw ne;
+            ResponseObject object = new ResponseObject();
+            object.setFieldObjectName("error");
+            object.setMessage(MessageConstants.getFailureMsg_delete(CategoryConstants.note));
+            object.setStatus(false);
+            list.add(object);
+
+            ResponseObject responseObject = new ResponseObject();
+            responseObject.setFieldObjectName("tabAfterError");
+            responseObject.setMessage(TabConstants.note);
+            responseObject.setStatus(false);
+            list.add(responseObject);
         } catch(Exception e) {
-            throw new NoteException(MessageConstants.defaultError, e);
+            ResponseObject object = new ResponseObject();
+            object.setFieldObjectName("error");
+            object.setMessage(MessageConstants.defaultError);
+            object.setStatus(false);
+            list.add(object);
+
+            ResponseObject responseObject = new ResponseObject();
+            responseObject.setFieldObjectName("tabAfterError");
+            responseObject.setMessage(TabConstants.note);
+            responseObject.setStatus(false);
+            list.add(responseObject);
         }
         return list;
     }

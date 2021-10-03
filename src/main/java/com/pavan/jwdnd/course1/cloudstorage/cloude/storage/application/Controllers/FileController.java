@@ -1,6 +1,9 @@
 package com.pavan.jwdnd.course1.cloudstorage.cloude.storage.application.Controllers;
 
 
+import com.pavan.jwdnd.course1.cloudstorage.cloude.storage.application.Constants.MessageConstants;
+import com.pavan.jwdnd.course1.cloudstorage.cloude.storage.application.Constants.TabConstants;
+import com.pavan.jwdnd.course1.cloudstorage.cloude.storage.application.Models.FileBean;
 import com.pavan.jwdnd.course1.cloudstorage.cloude.storage.application.Models.ResponseObject;
 import com.pavan.jwdnd.course1.cloudstorage.cloude.storage.application.Services.FileService;
 import com.pavan.jwdnd.course1.cloudstorage.cloude.storage.application.Services.LoginService;
@@ -19,8 +22,8 @@ import java.util.ArrayList;
 @RequestMapping("/file")
 public class FileController {
 
-    private FileService fileService;
-    private LoginService loginService;
+    private final FileService fileService;
+    private final LoginService loginService;
 
     public FileController(FileService fileService, LoginService loginService) {
         this.fileService = fileService;
@@ -30,11 +33,18 @@ public class FileController {
     @PostMapping("/upload")
     public String uploadFile(@RequestParam("fileUpload")MultipartFile multipartFile, Authentication authentication, Model model){
         int userId = loginService.getUserDetailsByUserName(authentication.getName()).getUserId();
-        ArrayList<ResponseObject> responseObjects =  fileService.uploadFile(multipartFile,userId);
 
-        for (ResponseObject object : responseObjects) {
-            model.addAttribute(object.getFieldObjectName(),object.getMessage());
+        if (!multipartFile.isEmpty()) {
+            ArrayList<ResponseObject> responseObjects = fileService.uploadFile(multipartFile, userId);
+
+            for (ResponseObject object : responseObjects) {
+                model.addAttribute(object.getFieldObjectName(), object.getMessage());
+            }
+        }else {
+            model.addAttribute("error", MessageConstants.fileError_empty);
+            model.addAttribute("tabAfterError", TabConstants.file);
         }
+
         return "result";
     }
 

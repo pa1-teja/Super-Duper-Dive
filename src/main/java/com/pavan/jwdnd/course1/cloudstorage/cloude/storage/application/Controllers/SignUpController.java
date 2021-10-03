@@ -14,8 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/signup")
 public class SignUpController {
 
-    private final SignUpService signUpService;
-    private boolean isUsrNameAvailable = false;
+    private SignUpService signUpService;
 
     public SignUpController(SignUpService signUpService) {
         this.signUpService = signUpService;
@@ -28,12 +27,12 @@ public class SignUpController {
 
     @PostMapping
     public String registerUser(@ModelAttribute("signUpFormObject") UserInfoBean userInfoBean, Model model){
-//        System.out.println("POST MAPPING: SIGNUP PAGE: \n first name :  " + userInfoBean.getFirstName() + "\n last name :" + userInfoBean.getLastName() + "\n username : " + userInfoBean.getUsername() + "\n password : " + userInfoBean.getPassword());
 
          if (signUpService.isUsernameAvailable(userInfoBean.getUsername())){
              int status = signUpService.registerUser(userInfoBean);
-             if (status == 1) {model.addAttribute("signUpSuccess", true);}
-             else{
+             if (status == 1) {
+                 model.addAttribute("signUpSuccess", true);
+             } else{
                  model.addAttribute("signUpError", MessageConstants.signupError_other);
              }
          } else {

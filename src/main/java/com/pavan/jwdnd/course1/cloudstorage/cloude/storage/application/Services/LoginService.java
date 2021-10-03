@@ -11,18 +11,14 @@ import java.util.ArrayList;
 public class LoginService {
 
 
-    private HashService hashService;
-    private UserMapper userMapper;
-    private EncryptionService encryptionService;
+    private final HashService hashService;
+    private final UserMapper userMapper;
+    private final EncryptionService encryptionService;
 
     public LoginService(HashService hashService, UserMapper userMapper, EncryptionService encryptionService) {
         this.hashService = hashService;
         this.userMapper = userMapper;
         this.encryptionService = encryptionService;
-    }
-
-    public boolean isUsernameAvailable(String username){
-        return userMapper.getUserDetailsByUserName(username) == null;
     }
 
     public UserInfoBean getUserDetailsByUserName(String username){

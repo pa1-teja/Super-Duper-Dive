@@ -18,8 +18,8 @@ public interface NotesMapper {
     @Delete("DELETE FROM NOTES WHERE noteid = #{noteid}")
     int deleteNote(int noteid);
 
-    @Update("UPDATE NOTES SET  notetitle = #{noteTitle}, notedescription = #{noteDescription} WHERE noteid = #{noteId}")
-    int updateNote(int noteId, String notetitle, String noteDescription);
+    @Update("UPDATE NOTES SET  notetitle = #{notetitle}, notedescription = #{notedescription} WHERE noteid = #{noteid}")
+    int updateNote(int noteid, String notetitle, String notedescription);
 
 
     @Select("SELECT COUNT(*) FROM NOTES WHERE userid = #{userId} AND notetitle = #{noteTitle}")

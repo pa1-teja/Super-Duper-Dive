@@ -18,32 +18,34 @@ import java.util.Base64;
 @Service
 public class CredentialsService {
 
-    private EncryptionService encryptionService;
-    private CredentialMapper credentialMapper;
+    private final EncryptionService encryptionService;
+    private final CredentialMapper credentialMapper;
 
     public CredentialsService(EncryptionService encryptionService, CredentialMapper credentialMapper) {
         this.encryptionService = encryptionService;
         this.credentialMapper = credentialMapper;
     }
 
-    public ArrayList<ResponseObject> addCredential(CredentialsBean credentialsBean, int userId){
+    public ArrayList<ResponseObject> addCredential(CredentialsBean credentialsBean){
         ArrayList<ResponseObject> list = new ArrayList<>();
         try{
             SecureRandom secureRandom = new SecureRandom();
             byte[] salt = new byte[16];
             secureRandom.nextBytes(salt);
             String key = Base64.getEncoder().encodeToString(salt);
+            credentialsBean.setKey(key);
             String encryptPassword = encryptionService.encryptValue(credentialsBean.getPassword(),key);
             credentialsBean.setPassword(encryptPassword);
             int insertCredRecord = credentialMapper.addCredential(credentialsBean);
             if (insertCredRecord == 1){
+                ResponseObject object = new ResponseObject();
+
+                object.setFieldObjectName("success");
+                object.setMessage(MessageConstants.getSuccessMsg_add(CategoryConstants.credential));
+                object.setStatus(false);
+                list.add(object);
+
                 ResponseObject responseObject = new ResponseObject();
-
-                responseObject.setFieldObjectName("success");
-                responseObject.setMessage(MessageConstants.getSuccessMsg_add(CategoryConstants.credential));
-                responseObject.setStatus(false);
-                list.add(responseObject);
-
                 responseObject.setFieldObjectName("tabAfterSuccess");
                 responseObject.setMessage(TabConstants.credential);
                 responseObject.setStatus(false);
@@ -63,11 +65,12 @@ public class CredentialsService {
         return credentialMapper.getAllCredential(userId);
     }
 
-    public ArrayList<ResponseObject> deleteCredential(int credentialId, Model model) {
+    public ArrayList<ResponseObject> deleteCredential(int credentialId) {
         ArrayList<ResponseObject> list = new ArrayList<>();
         try {
             //delete a credential
-            if (credentialMapper.deleteCredential(credentialId) == 1) {
+            int deleteRecordId = credentialMapper.deleteCredential(credentialId);
+            if (deleteRecordId== 1) {
 
                 ResponseObject responseObject = new ResponseObject();
 
@@ -76,18 +79,51 @@ public class CredentialsService {
                 responseObject.setStatus(false);
                 list.add(responseObject);
 
-                responseObject.setFieldObjectName("tabAfterSuccess");
+                ResponseObject object = new ResponseObject();
+                object.setFieldObjectName("tabAfterSuccess");
+                object.setMessage(TabConstants.credential);
+                object.setStatus(false);
+                list.add(object);
+
+            } else {
+
+                ResponseObject  object = new ResponseObject();
+                object.setFieldObjectName("error");
+                object.setMessage(MessageConstants.defaultError );
+                object.setStatus(false);
+                list.add(object);
+
+                ResponseObject responseObject = new ResponseObject();
+                responseObject.setFieldObjectName("tabAfterError");
                 responseObject.setMessage(TabConstants.credential);
                 responseObject.setStatus(false);
                 list.add(responseObject);
 
-            } else {
-                throw new CredentialException(MessageConstants.defaultError);
             }
         } catch(CredentialException ce) {
-            throw ce;
+            ResponseObject  object = new ResponseObject();
+            object.setFieldObjectName("error");
+            object.setMessage(MessageConstants.defaultError );
+            object.setStatus(false);
+            list.add(object);
+
+            ResponseObject responseObject = new ResponseObject();
+            responseObject.setFieldObjectName("tabAfterError");
+            responseObject.setMessage(TabConstants.credential);
+            responseObject.setStatus(false);
+            list.add(responseObject);
         } catch(Exception e) {
-            throw new CredentialException(MessageConstants.defaultError, e);
+            ResponseObject  object = new ResponseObject();
+            object.setFieldObjectName("error");
+            object.setMessage(MessageConstants.defaultError );
+            object.setStatus(false);
+            list.add(object);
+
+            ResponseObject responseObject = new ResponseObject();
+            responseObject.setFieldObjectName("tabAfterError");
+            responseObject.setMessage(TabConstants.credential);
+            responseObject.setStatus(false);
+            list.add(responseObject);
         }
         return list;
     }
@@ -98,7 +134,8 @@ public class CredentialsService {
             //getKey
             String key = credentialMapper.getKey(credentialId);
             String encryptedPassword = encryptionService.encryptValue(credentialsBean.getPassword(), key);
-            if (credentialMapper.updateCredential(credentialId, credentialsBean.getUrl(), credentialsBean.getUsername(), encryptedPassword) == 1) {
+            int updateRecordId = credentialMapper.updateCredential(credentialId, credentialsBean.getUrl(), credentialsBean.getUsername(), encryptedPassword);
+            if ( updateRecordId == 1) {
                 ResponseObject responseObject = new ResponseObject();
 
                 responseObject.setFieldObjectName("success");
@@ -106,10 +143,11 @@ public class CredentialsService {
                 responseObject.setStatus(false);
                 list.add(responseObject);
 
-                responseObject.setFieldObjectName("tabAfterSuccess");
-                responseObject.setMessage(TabConstants.credential);
-                responseObject.setStatus(false);
-                list.add(responseObject);
+                ResponseObject object = new ResponseObject();
+                object.setFieldObjectName("tabAfterSuccess");
+                object.setMessage(TabConstants.credential);
+                object.setStatus(false);
+                list.add(object);
             } else {
                 throw new CredentialException(MessageConstants.defaultError);
             }

@@ -23,23 +23,24 @@ import java.util.ArrayList;
 @Service
 public class FileService {
 
-    private FileMapper fileMapper;
+    private final FileMapper fileMapper;
 
     public FileService(FileMapper fileMapper) {
         this.fileMapper = fileMapper;
     }
 
     public ArrayList<ResponseObject> deleteFile(int userId) {
-        ResponseObject responseObject = new ResponseObject();
+
         ArrayList<ResponseObject> responseObjects = new ArrayList<>();
         try {
             if (fileMapper.deleteFile(userId) == 1) {
-                responseObject.setFieldObjectName("success");
-                responseObject.setMessage(MessageConstants.getSuccessMsg_delete(CategoryConstants.file));
-                responseObject.setStatus(false);
+                ResponseObject object = new ResponseObject();
+                object.setFieldObjectName("success");
+                object.setMessage(MessageConstants.getSuccessMsg_delete(CategoryConstants.file));
+                object.setStatus(false);
 
-                responseObjects.add(responseObject);
-
+                responseObjects.add(object);
+                ResponseObject responseObject = new ResponseObject();
                 responseObject.setFieldObjectName("tabAfterSuccess");
                 responseObject.setMessage(TabConstants.file);
                 responseObject.setStatus(false);
@@ -86,11 +87,22 @@ public class FileService {
     }
 
     public ArrayList<ResponseObject> uploadFile(MultipartFile multipartFile, int userId){
-        ResponseObject responseObject = new ResponseObject();
+
         ArrayList<ResponseObject> responseObjectArrayList = new ArrayList<>();
         if (!multipartFile.isEmpty()){
             if (fileCount(userId, multipartFile.getOriginalFilename()) > 0){
-                throw new FileException(MessageConstants.fileError_duplicate);
+
+                ResponseObject object = new ResponseObject();
+                object.setFieldObjectName("error");
+                object.setMessage(MessageConstants.fileError_duplicate);
+                object.setStatus(false);
+                responseObjectArrayList.add(object);
+                ResponseObject responseObject = new ResponseObject();
+                responseObject.setFieldObjectName("tabAfterError");
+                responseObject.setMessage(TabConstants.file);
+                responseObject.setStatus(false);
+                responseObjectArrayList.add(responseObject);
+
             } else {
                 try {
                     int insertFileRecord = fileMapper.insertFile(new FileBean(null,
@@ -101,17 +113,40 @@ public class FileService {
                             multipartFile.getBytes()));
 
                     if (insertFileRecord == 1) {
-                        responseObject.setFieldObjectName("success");
-                        responseObject.setMessage(MessageConstants.getSuccessMsg_add(CategoryConstants.file));
+                        ResponseObject object = new ResponseObject();
+                        object.setFieldObjectName("success");
+                        object.setMessage(MessageConstants.getSuccessMsg_add(CategoryConstants.file));
+                        object.setStatus(false);
+                        responseObjectArrayList.add(object);
+                        ResponseObject responseObject = new ResponseObject();
+                        responseObject.setFieldObjectName("tabAfterSuccess");
+                        responseObject.setMessage(TabConstants.file);
                         responseObject.setStatus(false);
                         responseObjectArrayList.add(responseObject);
-                        responseObject.setFieldObjectName("tabAfterSuccess");
+                    } else{
+                        ResponseObject object = new ResponseObject();
+                        object.setFieldObjectName("error");
+                        object.setMessage(MessageConstants.fileUploadFailed);
+                        object.setStatus(false);
+                        responseObjectArrayList.add(object);
+                        ResponseObject responseObject = new ResponseObject();
+                        responseObject.setFieldObjectName("tabAfterError");
                         responseObject.setMessage(TabConstants.file);
                         responseObject.setStatus(false);
                         responseObjectArrayList.add(responseObject);
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+
+                    ResponseObject object = new ResponseObject();
+                    object.setFieldObjectName("otherError");
+                    object.setMessage(MessageConstants.fileUploadFailed);
+                    object.setStatus(false);
+                    responseObjectArrayList.add(object);
+                    ResponseObject responseObject = new ResponseObject();
+                    responseObject.setFieldObjectName("tabAfterOtherError");
+                    responseObject.setMessage(TabConstants.file);
+                    responseObject.setStatus(false);
+                    responseObjectArrayList.add(responseObject);
                 }
             }
         }

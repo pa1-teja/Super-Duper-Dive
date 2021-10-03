@@ -10,9 +10,9 @@ import java.util.Base64;
 @Service
 public class SignUpService {
 
-    private HashService hashService;
-    private UserMapper userMapper;
-    private EncryptionService encryptionService;
+    private final HashService hashService;
+    private final UserMapper userMapper;
+    private final EncryptionService encryptionService;
 
     public SignUpService(HashService hashService, UserMapper userMapper, EncryptionService encryptionService) {
         this.hashService = hashService;

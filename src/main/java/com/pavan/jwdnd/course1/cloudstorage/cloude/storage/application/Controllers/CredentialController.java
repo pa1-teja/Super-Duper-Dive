@@ -2,6 +2,7 @@ package com.pavan.jwdnd.course1.cloudstorage.cloude.storage.application.Controll
 
 
 import com.pavan.jwdnd.course1.cloudstorage.cloude.storage.application.Models.CredentialsBean;
+import com.pavan.jwdnd.course1.cloudstorage.cloude.storage.application.Models.FormObjects.CredentialFormObject;
 import com.pavan.jwdnd.course1.cloudstorage.cloude.storage.application.Models.ResponseObject;
 import com.pavan.jwdnd.course1.cloudstorage.cloude.storage.application.Services.CredentialsService;
 import com.pavan.jwdnd.course1.cloudstorage.cloude.storage.application.Services.LoginService;
@@ -19,8 +20,8 @@ import java.util.ArrayList;
 @RequestMapping("/credentials")
 public class CredentialController {
 
-    private CredentialsService credentialsService;
-    private LoginService loginService;
+    private final CredentialsService credentialsService;
+    private final LoginService loginService;
 
     public CredentialController(CredentialsService credentialsService, LoginService loginService) {
         this.credentialsService = credentialsService;
@@ -29,11 +30,21 @@ public class CredentialController {
 
 
     @PostMapping("/edit")
-    public String addCredential(CredentialsBean credentialsBean, Authentication authentication, Model model, @ModelAttribute(value = "credentialId") String credentialId) {
-        ArrayList<ResponseObject> list = new ArrayList<>();
+    public String addCredential(@ModelAttribute("NotesFormObject") CredentialFormObject credentialFormObject,
+                                Authentication authentication,
+                                Model model,
+                                @ModelAttribute(value = "credentialId") String credentialId) {
+
+        ArrayList<ResponseObject> list;
         int userId = loginService.getUserDetailsByUserName(authentication.getName()).getUserId();
+        CredentialsBean credentialsBean = new CredentialsBean(
+                null,
+                credentialFormObject.getUrl(),
+                credentialFormObject.getUsername(),
+                null,
+                credentialFormObject.getPassword(), userId);
         if (credentialId.equals("")) {
-           list = credentialsService.addCredential(credentialsBean, userId);
+           list = credentialsService.addCredential(credentialsBean);
         } else {
            list = credentialsService.updateCredential(credentialsBean, Integer.valueOf(credentialId));
         }
@@ -46,7 +57,7 @@ public class CredentialController {
 
     @RequestMapping(value = "/delete/{credentialId}")
     public String deleteCredential(@PathVariable int credentialId, Model model) {
-        ArrayList<ResponseObject> list =  credentialsService.deleteCredential(credentialId, model);
+        ArrayList<ResponseObject> list =  credentialsService.deleteCredential(credentialId);
         for (ResponseObject obj: list) {
             model.addAttribute(obj.getFieldObjectName(),obj.getMessage());
         }
