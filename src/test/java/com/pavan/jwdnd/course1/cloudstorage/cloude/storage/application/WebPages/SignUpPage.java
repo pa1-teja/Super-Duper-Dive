@@ -23,7 +23,7 @@ public class SignUpPage {
     @FindBy(name = "signUp")
     private WebElement submit;
 
-    private WebDriver seleniumWebDriver;
+    private final WebDriver seleniumWebDriver;
 
     public SignUpPage(WebDriver seleniumWebDriver) {
         this.seleniumWebDriver = seleniumWebDriver;

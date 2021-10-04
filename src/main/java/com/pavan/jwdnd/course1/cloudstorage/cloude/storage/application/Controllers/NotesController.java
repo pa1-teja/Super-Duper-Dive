@@ -33,7 +33,7 @@ public class NotesController {
 
         int userId = loginService.getUserDetailsByUserName(authentication.getName()).getUserId();
         NotesBean notesBean = new NotesBean(null,formObject.getNotetitle(),formObject.getNotedescription(),userId);
-        ArrayList<ResponseObject> list = new ArrayList<>();
+        ArrayList<ResponseObject> list;
         if (noteId.equals("")) {
              list = notesService.addNote(notesBean);
         } else {

@@ -45,7 +45,7 @@ public class HomeController {
         int userId = loginService.getUserDetailsByUserName(authentication.getName()).getUserId();
         model.addAttribute("fileList", fileService.getAllFiles(userId));
         model.addAttribute("noteList", notesService.getAllNotes(userId));
-        model.addAttribute("credentialList", credentialsService.getAllUserCredentials(userId));
+        model.addAttribute("credentialsList", credentialsService.getAllUserCredentials(userId));
         model.addAttribute("activeTab",tabOption);
         model.addAttribute("encryptionService", encryptionService);
         return "home";

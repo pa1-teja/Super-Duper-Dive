@@ -59,7 +59,7 @@ public class FileController {
     }
 
     @GetMapping(value = "/view/{fieldId}")
-    public ResponseEntity<Resource> viewFile(@PathVariable("fieldId") int fieldId, Authentication authentication ,Model model){
+    public ResponseEntity<Resource> viewFile(@PathVariable("fieldId") int fieldId, Authentication authentication){
        return fileService.viewFile(fieldId);
     }
 }

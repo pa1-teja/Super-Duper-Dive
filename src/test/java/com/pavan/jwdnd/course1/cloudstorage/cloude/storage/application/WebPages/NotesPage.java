@@ -32,7 +32,7 @@ public class NotesPage {
     @FindBy(id="noteDeleteButton")
     private WebElement listItemNoteDeleteBtn;
 
-    private  WebDriver seleniumWebDriver;
+    private final WebDriver seleniumWebDriver;
 
     public NotesPage(WebDriver seleniumWebDriver) {
         this.seleniumWebDriver = seleniumWebDriver;

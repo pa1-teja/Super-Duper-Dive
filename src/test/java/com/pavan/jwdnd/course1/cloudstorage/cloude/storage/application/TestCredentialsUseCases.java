@@ -32,7 +32,7 @@ public class TestCredentialsUseCases {
     String password = "sai";
     String fstName = "pavan";
     String lstName = "teja";
-    private String url = "http://localhost:8080/login";
+    private final String url = "http://localhost:8080/login";
 
     @BeforeAll
     static void beforeAll() {

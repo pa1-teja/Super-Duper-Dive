@@ -38,7 +38,7 @@ public class CredentialsPage {
     @FindBy(id="credentialDeleteButton")
     private WebElement credentialListItemDeleteBtn;
 
-    private WebDriver seleniumWebDriver;
+    private final WebDriver seleniumWebDriver;
 
     public CredentialsPage(WebDriver seleniumWebDriver) {
         this.seleniumWebDriver = seleniumWebDriver;

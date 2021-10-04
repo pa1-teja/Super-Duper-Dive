@@ -19,7 +19,7 @@
         <nav style="clear: right;">
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
                 <a aria-controls="nav-files"
-                   aria-selected="true" class="nav-item nav-link active"
+                   aria-selected="false" class="nav-item nav-link"
                    data-toggle="tab" href="#nav-files" id="nav-files-tab"
                    role="tab" th:classappend="${#strings.equals(activeTab, 'files') ? 'active' : ''}">Files</a>
                 <a aria-controls="nav-notes" aria-selected="false"
@@ -34,7 +34,7 @@
             </div>
         </nav>
         <div class="tab-content" id="nav-tabContent">
-            <div aria-labelledby="nav-files-tab" class="tab-pane fade show active"
+            <div aria-labelledby="nav-files-tab" class="tab-pane fade show"
                  id="nav-files" role="tabpanel"
                  th:classappend="${#strings.equals(activeTab, 'files') ? 'active' : ''}">
                 <form action="#" enctype="multipart/form-data" method="POST" th:action="@{/file/upload}">
@@ -171,7 +171,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="eachCredential : ${credentialList}">
+                        <tr th:each="eachCredential : ${credentialsList}">
                             <td>
                                 <button class="btn btn-success"
                                         id="credentialEditButton"
@@ -227,7 +227,7 @@
                                         <input class="form-control" id="credential-password" maxlength="30"
                                                name="password"
                                                required
-                                               th:field="*{password}" type="text">
+                                               th:field="*{password}" type="password">
                                     </div>
                                     <button class="d-none" id="credentialSubmit" type="submit"></button>
                                 </form>

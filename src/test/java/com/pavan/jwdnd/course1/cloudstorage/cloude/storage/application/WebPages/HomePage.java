@@ -11,7 +11,7 @@ public class HomePage {
     @FindBy(id="logout")
     private WebElement logout;
 
-    private  WebDriver seleniumWebDriver;
+    private final WebDriver seleniumWebDriver;
 
     public HomePage(WebDriver seleniumWebDriver) {
         this.seleniumWebDriver = seleniumWebDriver;

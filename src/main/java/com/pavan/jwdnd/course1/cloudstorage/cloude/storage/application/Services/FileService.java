@@ -70,17 +70,17 @@ public class FileService {
         try{
 
             FileBean fileBean = fileMapper.getFile(fileId);
-            ResponseEntity entity = null;
-            String type = fileBean.getContenttype();
+            ResponseEntity responseEntity;
+            String contentType = fileBean.getContenttype();
             byte[] fileData = fileBean.getFiledata();
 
             HttpHeaders respHeaders = new HttpHeaders();
             respHeaders.add("content-disposition","attachment; filename=" + fileBean.getFilename());
-            respHeaders.add("Content-Type",type);
+            respHeaders.add("Content-Type",contentType);
 
-            entity = new ResponseEntity(fileData, HttpStatus.OK);
+            responseEntity = new ResponseEntity(fileData, HttpStatus.OK);
 
-            return entity;
+            return responseEntity;
         }catch (Exception e){
             throw new FileException(MessageConstants.defaultError,e);
         }

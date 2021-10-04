@@ -23,7 +23,7 @@ public class LoginPage {
     @FindBy(id = "logoutMessage")
     private WebElement logoutMessage;
 
-    private WebDriver seleniumWebDriver;
+    private final WebDriver seleniumWebDriver;
 
     public LoginPage(WebDriver seleniumWebDriver) {
         this.seleniumWebDriver = seleniumWebDriver;
