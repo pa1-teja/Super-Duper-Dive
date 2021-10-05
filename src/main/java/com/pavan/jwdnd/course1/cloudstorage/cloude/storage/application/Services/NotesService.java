@@ -10,7 +10,6 @@ import com.pavan.jwdnd.course1.cloudstorage.cloude.storage.application.Models.No
 import com.pavan.jwdnd.course1.cloudstorage.cloude.storage.application.Models.ResponseObject;
 import com.pavan.jwdnd.course1.cloudstorage.cloude.storage.application.Repositories.NotesMapper;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 
 import java.util.ArrayList;
 
